@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SiteSignal for Landscapers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a product spec that opens on the working app, then explains the pipeline, the parts, the money and the build. Drafting-paper ground, council-stamp green, hi-vis amber for hot leads. */
+:root{
+  --paper:#F2F5F2; --surface:#FFFFFF; --sunk:#E8EDEA; --ink:#15201C; --muted:#5A6863; --line:#D3DBD7;
+  --accent:#1E6A56; --accent-soft:#DDEDE7; --hot:#C9711E; --hot-soft:#FBEBDA; --cold:#97A39E;
+  --good:#2E7D4F; --display:"Archivo","Helvetica Neue",Arial,sans-serif; --body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0E1412; --surface:#161F1C; --sunk:#1C2723; --ink:#E4EBE8; --muted:#94A39D; --line:#2B3833;
+  --accent:#55B897; --accent-soft:#1B3A31; --hot:#F0A04B; --hot-soft:#3A2814; --cold:#5F6E68; --good:#5CC48A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0E1412; --surface:#161F1C; --sunk:#1C2723; --ink:#E4EBE8; --muted:#94A39D; --line:#2B3833;
+  --accent:#55B897; --accent-soft:#1B3A31; --hot:#F0A04B; --hot-soft:#3A2814; --cold:#5F6E68; --good:#5CC48A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+h1{font-size:clamp(30px,5vw,48px);font-weight:800;line-height:1.05}
+h2{font-size:clamp(22px,3vw,30px);font-weight:700;line-height:1.15}
+h3{font-size:17px;font-weight:700}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:18px;color:var(--muted);max-width:62ch}
+.mono{font-family:var(--mono)}
+.num{font-variant-numeric:tabular-nums}
+section{padding-block:56px;border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+.sec-head{display:grid;gap:10px;margin-bottom:28px;max-width:70ch}
+.sec-head p{color:var(--muted)}
+
+/* hero */
+header.hero{padding-block:40px 28px}
+.hero-grid{display:grid;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--display);font-weight:800;font-size:18px}
+.brand-mark{width:26px;height:26px;border-radius:6px;background:var(--accent);display:grid;place-items:center}
+.brand-mark svg{display:block}
+.pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.pill{font-family:var(--mono);font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted)}
+
+/* app mock */
+.app{margin-top:28px;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 1px 0 var(--line),0 18px 40px -28px rgba(0,0,0,.35)}
+.appbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line);background:var(--sunk)}
+.appbar .who{font-size:13px;color:var(--muted)}
+.appbar .who b{color:var(--ink);font-weight:600}
+.example-tag{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--hot);border:1px solid var(--hot);border-radius:4px;padding:2px 6px}
+.tabs{display:flex;gap:2px;overflow-x:auto;padding:0 8px;border-bottom:1px solid var(--line)}
+.tab{appearance:none;background:none;border:0;border-bottom:2px solid transparent;padding:11px 12px;font:600 13px var(--body);color:var(--muted);cursor:pointer;white-space:nowrap}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:focus-visible,button:focus-visible,.chip:focus-visible,.lead-row:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.panel{padding:16px}
+.leads-layout{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:16px}
+@media (max-width:860px){.leads-layout{grid-template-columns:minmax(0,1fr)}}
+.mapbox{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--sunk)}
+.mapbox svg{display:block;width:100%;height:auto}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip{appearance:none;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:500 12.5px var(--body);padding:5px 10px;border-radius:999px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.list{display:grid;gap:6px;max-height:330px;overflow:auto;padding-right:2px}
+.lead-row{display:grid;grid-template-columns:44px minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.lead-row[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.score{font:600 14px var(--mono);text-align:center;border-radius:6px;padding:5px 0}
+.score.hot{background:var(--hot-soft);color:var(--hot)}
+.score.warm{background:var(--accent-soft);color:var(--accent)}
+.score.cold{background:var(--sunk);color:var(--muted)}
+.lead-row .t{font-weight:600;font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lead-row .s{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.status{font:500 11.5px var(--mono);padding:3px 7px;border-radius:4px;background:var(--sunk);color:var(--muted);white-space:nowrap}
+.status.sent{background:var(--accent-soft);color:var(--accent)}
+.status.replied{background:var(--hot-soft);color:var(--hot)}
+.detail{border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:16px;display:grid;gap:14px}
+.detail-top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.kv{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.kv div{background:var(--sunk);border-radius:8px;padding:8px 10px}
+.kv dt{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.kv dd{margin:2px 0 0;font-weight:600;font-variant-numeric:tabular-nums}
+dl{margin:0}
+.bars{display:grid;gap:6px}
+.bar{display:grid;grid-template-columns:130px minmax(0,1fr) 44px;gap:8px;align-items:center;font-size:13px}
+.bar .track{height:8px;background:var(--sunk);border-radius:4px;overflow:hidden}
+.bar .fill{height:100%;background:var(--accent);border-radius:4px}
+.bar .v{font:500 12.5px var(--mono);text-align:right;color:var(--muted)}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+.btn{appearance:none;border:1px solid var(--accent);background:var(--accent);color:var(--surface);font:600 13px var(--body);padding:8px 12px;border-radius:8px;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.toast{font-size:13px;color:var(--good);min-height:20px}
+.tl{display:flex;flex-wrap:wrap;gap:6px;align-items:center;font-size:12.5px}
+.tl span{padding:4px 8px;border-radius:6px;background:var(--sunk);color:var(--muted)}
+.tl span.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.tl i{color:var(--cold);font-style:normal}
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:14px;background:var(--surface)}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font:600 12px var(--body);text-transform:uppercase;letter-spacing:.05em;color:var(--muted);background:var(--sunk)}
+tr:last-child td{border-bottom:0}
+td.n{font-variant-numeric:tabular-nums;font-family:var(--mono);white-space:nowrap}
+.rules{display:grid;gap:8px}
+.rule{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;padding:10px 12px;border:1px solid var(--line);border-radius:8px}
+.rule .r1{font-weight:600;font-size:14px}
+.rule .r2{font-size:12.5px;color:var(--muted)}
+.switch{width:38px;height:22px;border-radius:999px;background:var(--accent);position:relative;border:0;cursor:pointer}
+.switch::after{content:"";position:absolute;top:3px;left:19px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:left .15s}
+.switch[aria-checked="false"]{background:var(--cold)}
+.switch[aria-checked="false"]::after{left:3px}
+.camp{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:860px){.camp{grid-template-columns:minmax(0,1fr)}}
+.funnel{display:grid;gap:8px}
+.frow{display:grid;grid-template-columns:110px minmax(0,1fr) 70px;gap:10px;align-items:center;font-size:14px}
+.frow .track{height:22px;background:var(--sunk);border-radius:5px;overflow:hidden}
+.frow .fill{height:100%;background:var(--accent);opacity:.85}
+.frow:last-child .fill{background:var(--hot);opacity:1}
+.frow .v{font:600 14px var(--mono);text-align:right}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
+.tile{background:var(--sunk);border-radius:10px;padding:12px}
+.tile .k{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.tile .v{font:700 24px var(--display);font-variant-numeric:tabular-nums;margin-top:2px}
+
+/* pipeline */
+.pipe{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px;counter-reset:step}
+@media (max-width:980px){.pipe{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:520px){.pipe{grid-template-columns:minmax(0,1fr)}}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;display:grid;gap:8px;align-content:start}
+.step .no{font:500 12px var(--mono);color:var(--accent)}
+.step p{font-size:13.5px;color:var(--muted)}
+.step ul{margin:0;padding-left:16px;font-size:13px;display:grid;gap:3px}
+
+/* features */
+.feat{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}
+.fcard{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--surface);display:grid;gap:6px;align-content:start}
+.fcard .tag{font:500 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.fcard p{font-size:14px;color:var(--muted)}
+
+/* letter */
+.letter-wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.letter-wrap{grid-template-columns:minmax(0,1fr)}}
+.letter{background:#FFFDF8;color:#1C1A16;border-radius:6px;padding:26px 26px 22px;border:1px solid var(--line);box-shadow:0 14px 30px -24px rgba(0,0,0,.5);display:grid;gap:12px;font-size:14px;position:relative}
+.letter .lh{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:2px solid #2C6B3F;padding-bottom:10px}
+.letter .lh b{font:800 18px var(--display);color:#2C6B3F}
+.letter .lh span{font-size:12px;color:#5E5A50}
+.letter h4{margin:0;font:700 20px var(--display);line-height:1.2}
+.letter .photos{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.letter .photos div{aspect-ratio:4/3;border-radius:4px;background:linear-gradient(160deg,#8DB27A,#4F7A43 60%,#B9A27F);max-width:100%}
+.letter .photos div:nth-child(2){background:linear-gradient(160deg,#A7B6A0,#6A8C5E 55%,#C7BBA4)}
+.letter .photos div:nth-child(3){background:linear-gradient(160deg,#7FA6B5,#5B8A5A 55%,#D6C9AE)}
+.letter .offer{background:#F3EBD8;border:1px dashed #B08A3E;border-radius:6px;padding:10px 12px;font-weight:600}
+.letter .foot{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid #E2DCCD;padding-top:12px}
+.letter .qr{width:64px;height:64px;flex:none;background:
+  conic-gradient(from 90deg at 30% 30%,#1C1A16 25%,transparent 0) 0 0/16px 16px, #fff;border:4px solid #1C1A16}
+.letter .mark{position:absolute;right:-10px;font:600 11px var(--mono);background:var(--hot);color:#fff;border-radius:999px;width:22px;height:22px;display:grid;place-items:center}
+.anat{display:grid;gap:10px;counter-reset:a}
+.anat li{list-style:none;display:grid;grid-template-columns:26px minmax(0,1fr);gap:10px;font-size:14px}
+.anat li::before{counter-increment:a;content:counter(a);font:600 11px var(--mono);background:var(--hot);color:var(--surface);border-radius:999px;width:22px;height:22px;display:grid;place-items:center}
+.anat b{display:block}
+.anat span{color:var(--muted)}
+ol.anat{margin:0;padding:0}
+
+/* pricing */
+.price{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:860px){.price{grid-template-columns:minmax(0,1fr)}}
+.pcard{border:1px solid var(--line);border-radius:12px;padding:18px;background:var(--surface);display:grid;gap:10px;align-content:start}
+.pcard.main{border:2px solid var(--accent)}
+.pcard .amt{font:800 26px var(--display);font-variant-numeric:tabular-nums}
+.pcard .amt small{font:500 13px var(--body);color:var(--muted)}
+.pcard ul{margin:0;padding-left:18px;font-size:14px;display:grid;gap:4px}
+.pcard .who{font-size:13px;color:var(--muted)}
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+
+/* build */
+.phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:860px){.phases{grid-template-columns:minmax(0,1fr)}}
+.phase{border-left:3px solid var(--accent);padding:4px 0 4px 14px;display:grid;gap:8px;align-content:start}
+.phase .when{font:500 12px var(--mono);color:var(--accent)}
+.phase ul{margin:0;padding-left:18px;font-size:14px;display:grid;gap:4px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media (max-width:860px){.two{grid-template-columns:minmax(0,1fr)}}
+.checklist{margin:0;padding:0;list-style:none;display:grid;gap:8px;font-size:14px}
+.checklist li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:8px}
+.checklist li::before{content:"";width:12px;height:12px;margin-top:5px;border:2px solid var(--accent);border-radius:3px}
+footer{padding-block:28px 48px;color:var(--muted);font-size:13px;border-top:1px solid var(--line)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+
+</head>
+<body>
+<div class="wrap">
+<header class="hero">
+  <div class="hero-grid">
+    <div class="brand"><span class="brand-mark"><svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M2 13 L8 3 L14 13 Z" fill="none" stroke="#fff" stroke-width="2"/><circle cx="8" cy="10" r="1.6" fill="#fff"/></svg></span>SiteSignal</div>
+    <span class="eyebrow">For landscapers</span>
+    <h1>Every new council approval near you, turned into a job you can win.</h1>
+    <p class="lead">SiteSignal watches every new council approval in your area, picks the ones that need your trade, waits for the right moment, posts the owner a letter about your business, and shows you which letters turned into jobs.</p>
+  </div>
+
+  <div class="app" id="app">
+    <div class="appbar">
+      <div class="who"><b>GreenEdge Landscapes</b> · Hills District territory · 15 km radius</div>
+      <span class="example-tag">Example data</span>
+    </div>
+    <div class="tabs" role="tablist" aria-label="App screens">
+      <button class="tab" role="tab" id="t-leads" aria-selected="true" aria-controls="p-leads">Leads</button>
+      <button class="tab" role="tab" id="t-camp" aria-selected="false" aria-controls="p-camp">Letter campaigns</button>
+      <button class="tab" role="tab" id="t-build" aria-selected="false" aria-controls="p-build">Builders</button>
+      <button class="tab" role="tab" id="t-res" aria-selected="false" aria-controls="p-res">Results</button>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-leads" aria-labelledby="t-leads">
+      <div class="leads-layout">
+        <div class="mapbox" aria-label="Map of leads in the territory">
+          <svg id="map" viewBox="0 0 600 380" role="img" aria-label="Illustrative territory map with lead pins"></svg>
+        </div>
+        <div style="min-width:0">
+          <div class="chips" role="group" aria-label="Filter leads">
+            <button class="chip" data-f="all" aria-pressed="true">All</button>
+            <button class="chip" data-f="pool" aria-pressed="false">Pools</button>
+            <button class="chip" data-f="house" aria-pressed="false">New homes</button>
+            <button class="chip" data-f="granny" aria-pressed="false">Granny flats</button>
+            <button class="chip" data-f="hot" aria-pressed="false">Hot only</button>
+          </div>
+          <div class="list" id="list"></div>
+        </div>
+      </div>
+      <div class="detail" id="detail"></div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-camp" aria-labelledby="t-camp" hidden>
+      <div class="camp">
+        <div style="min-width:0">
+          <h3 style="margin-bottom:10px">Automatic send rules</h3>
+          <div class="rules">
+            <div class="rule"><div><div class="r1">Pool approved → letter A "Pool surrounds"</div><div class="r2">Wait 10 weeks after approval · score 60+ · within 15 km</div></div><button class="switch" role="switch" aria-checked="true" aria-label="Pool rule"></button></div>
+            <div class="rule"><div><div class="r1">New home approved → letter B "Bare yard"</div><div class="r2">Send at estimated handover (approval + 9 months)</div></div><button class="switch" role="switch" aria-checked="true" aria-label="New home rule"></button></div>
+            <div class="rule"><div><div class="r1">Granny flat approved → letter C "Split yard"</div><div class="r2">Wait 4 months · cost of works $150k+</div></div><button class="switch" role="switch" aria-checked="true" aria-label="Granny flat rule"></button></div>
+            <div class="rule"><div><div class="r1">Builder on 3+ approvals → builder email</div><div class="r2">Business email only · unsubscribe included</div></div><button class="switch" role="switch" aria-checked="false" aria-label="Builder email rule"></button></div>
+          </div>
+        </div>
+        <div style="min-width:0">
+          <h3 style="margin-bottom:10px">This month</h3>
+          <div class="tiles">
+            <div class="tile"><div class="k">Monthly cap</div><div class="v">150</div></div>
+            <div class="tile"><div class="k">Queued</div><div class="v">38</div></div>
+            <div class="tile"><div class="k">Sent</div><div class="v">94</div></div>
+          </div>
+          <p style="font-size:14px;color:var(--muted)">Each letter is printed and posted by a mail service the day it's due. The cap stops postage running over budget. Every letter carries a QR code and a tracked phone number unique to that campaign.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-build" aria-labelledby="t-build" hidden>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:12px">Builders named as the applicant on approvals in your territory over the last 12 months. One good builder relationship can bring a job every month.</p>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Builder</th><th>Approvals</th><th>Mostly builds</th><th>Latest</th><th>Contacted</th></tr></thead>
+        <tbody>
+          <tr><td>Northline Homes</td><td class="n">14</td><td>Double-storey homes</td><td class="n">3 Nov</td><td>Not yet</td></tr>
+          <tr><td>Parkview Pools</td><td class="n">11</td><td>Concrete pools</td><td class="n">10 Nov</td><td>Emailed 2 Nov</td></tr>
+          <tr><td>Kestrel Granny Flats</td><td class="n">9</td><td>Granny flats</td><td class="n">28 Oct</td><td>Not yet</td></tr>
+          <tr><td>Ridgeway Building Co</td><td class="n">6</td><td>Knockdown-rebuilds</td><td class="n">6 Nov</td><td>Not yet</td></tr>
+          <tr><td>Bluegum Constructions</td><td class="n">4</td><td>Dual occupancy</td><td class="n">21 Oct</td><td>Replied</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+
+    <div class="panel" role="tabpanel" id="p-res" aria-labelledby="t-res" hidden>
+      <div class="tiles">
+        <div class="tile"><div class="k">Spent (90 days)</div><div class="v">$2,760</div></div>
+        <div class="tile"><div class="k">Jobs won</div><div class="v">7</div></div>
+        <div class="tile"><div class="k">Revenue won</div><div class="v">$58,400</div></div>
+        <div class="tile"><div class="k">Return</div><div class="v">21×</div></div>
+      </div>
+      <div class="funnel" id="funnel"></div>
+      <p class="note">Spent = service plus postage over 3 months. Replies are counted from QR scans and calls to the tracked number. Example figures only.</p>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">How it works</span>
+    <h2>Six stages, from approval to paid job</h2>
+    <p>The trade only touches the last stage. Everything before it runs on its own every day.</p>
+  </div>
+  <div class="pipe">
+    <div class="step"><span class="no">01 · Collect</span><h3>Find approvals</h3><p>Every day, new council approvals in your area are picked up.</p><ul><li>Pools, homes, granny flats</li><li>Address, cost of works, builder, date</li></ul></div>
+    <div class="step"><span class="no">02 · Understand</span><h3>Read each project</h3><p>Each project is read and sorted by type.</p><ul><li>Pool, new home, granny flat, knockdown-rebuild, dual occupancy</li><li>Lot size and property details</li><li>Builder name cleaned up</li></ul></div>
+    <div class="step"><span class="no">03 · Score</span><h3>Rank for your trade</h3><p>Each project gets a 0–100 score for this business.</p><ul><li>Job type fit</li><li>Cost of works</li><li>Distance from base</li><li>Lot size</li></ul></div>
+    <div class="step"><span class="no">04 · Time</span><h3>Wait for the right moment</h3><p>A letter about a garden lands when the build is nearly done, not on approval day.</p><ul><li>Delay per project type</li><li>Adjustable per trade</li></ul></div>
+    <div class="step"><span class="no">05 · Reach</span><h3>Post the letter</h3><p>A branded letter goes to the site address. Builders get a business email.</p><ul><li>Print-and-mail service</li><li>Monthly cap</li><li>Never mails an address twice</li></ul></div>
+    <div class="step"><span class="no">06 · Track</span><h3>Count what worked</h3><p>Every reply is tied back to its letter.</p><ul><li>QR scans and tracked calls</li><li>Quote → won pipeline</li><li>Monthly return report</li></ul></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">The two rules that make it work</span>
+    <h2>Score the right projects, then send at the right time</h2>
+    <p>Most lead lists fail because every lead gets the same treatment on the day it appears. SiteSignal ranks and times each one.</p>
+  </div>
+  <div class="two">
+    <div style="min-width:0">
+      <h3 style="margin-bottom:10px">Score for a landscaper (0–100)</h3>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Factor</th><th>Points</th><th>How it's judged</th></tr></thead>
+        <tbody>
+          <tr><td>Job type fit</td><td class="n">35</td><td>Pool 35, new home 30, granny flat 25, alterations 10</td></tr>
+          <tr><td>Cost of works</td><td class="n">25</td><td>Bigger builds usually mean bigger yards and budgets</td></tr>
+          <tr><td>Distance from base</td><td class="n">20</td><td>Full points inside 5 km, zero past the service radius</td></tr>
+          <tr><td>Lot size</td><td class="n">10</td><td>More land, more work</td></tr>
+          <tr><td>Timing window</td><td class="n">10</td><td>Higher as the project nears its send date</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">75+ is hot, 50–74 warm, under 50 cold. Weights are a starting point and change per trade.</p>
+    </div>
+    <div style="min-width:0">
+      <h3 style="margin-bottom:10px">When to send, by project type</h3>
+      <div class="table-scroll"><table>
+        <thead><tr><th>Project</th><th>Send letter</th><th>Why then</th></tr></thead>
+        <tbody>
+          <tr><td>New pool</td><td class="n">+2–3 months</td><td>Pool is in; surrounds and fencing come next</td></tr>
+          <tr><td>New home</td><td class="n">+9–12 months</td><td>Around handover, when the yard is bare</td></tr>
+          <tr><td>Granny flat</td><td class="n">+4–6 months</td><td>Yard needs splitting and screening</td></tr>
+          <tr><td>Knockdown-rebuild</td><td class="n">+10–12 months</td><td>Same as a new home</td></tr>
+        </tbody>
+      </table></div>
+      <p class="note">Estimated build times. Real response data will tune these over the first few months.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">What gets posted</span>
+    <h2>The letter is all about the trade</h2>
+    <p>Set up once during onboarding. The project details change per address automatically.</p>
+  </div>
+  <div class="letter-wrap">
+    <div class="letter" aria-label="Example letter">
+      <div class="lh"><b>GreenEdge Landscapes</b><span>Local to Kellyville since 2014</span></div>
+      <span class="mark" style="top:28px">1</span>
+      <h4>Congratulations on your new pool at 14 Example Street.</h4>
+      <span class="mark" style="top:92px">2</span>
+      <p>Once the pool's in, the yard around it is next. We've built pool surrounds, turf and gardens for families across the Hills District for 12 years.</p>
+      <div class="photos" aria-hidden="true"><div></div><div></div><div></div></div>
+      <span class="mark" style="top:220px">3</span>
+      <p style="font-size:13px;color:#5E5A50">Recent jobs: Rouse Hill pool surround · Castle Hill backyard · Kellyville turf and paving</p>
+      <div class="offer">Free design consult + 10% off pool landscaping booked before March.</div>
+      <span class="mark" style="top:300px">4</span>
+      <div class="foot"><div><b style="font-size:16px">0400 000 000</b><div style="font-size:12px;color:#5E5A50">Call, or scan for a free quote</div></div><div class="qr" aria-hidden="true"></div></div>
+      <span class="mark" style="bottom:30px">5</span>
+    </div>
+    <ol class="anat">
+      <li><div><b>Personal opening</b><span>Names the project and street, so it reads like a letter, not a flyer.</span></div></li>
+      <li><div><b>Who they are</b><span>Local, years in business, what they specialise in.</span></div></li>
+      <li><div><b>Proof</b><span>Three photos of real jobs in nearby suburbs.</span></div></li>
+      <li><div><b>One clear offer</b><span>Something with a deadline, so people act now.</span></div></li>
+      <li><div><b>Tracked contact</b><span>A call-tracking number and QR code unique to this campaign. That's how every job gets counted.</span></div></li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="eyebrow">Features</span>
+    <h2>Everything in the product</h2>
+  </div>
+  <div class="feat">
+    <div class="fcard"><span class="tag">Setup</span><h3>Territory and trade profile</h3><p>Base address, service radius, job types wanted, minimum job size, logo, photos, offer.</p></div>
+    <div class="fcard"><span class="tag">Leads</span><h3>Daily lead feed</h3><p>Map and list of every matching approval, filterable by type, suburb, score and status.</p></div>
+    <div class="fcard"><span class="tag">Leads</span><h3>Lead score</h3><p>0–100 with the breakdown shown, so the trade sees why a lead is hot.</p></div>
+    <div class="fcard"><span class="tag">Outreach</span><h3>Timing engine</h3><p>Holds each lead until its send date, per project type.</p></div>
+    <div class="fcard"><span class="tag">Outreach</span><h3>Automatic letters</h3><p>Rules decide what to post and when. Monthly cap, no duplicates, one-click manual send too.</p></div>
+    <div class="fcard"><span class="tag">Outreach</span><h3>Builder radar</h3><p>Ranks builders by approvals in the territory, with optional business emails to the busiest.</p></div>
+    <div class="fcard"><span class="tag">Tracking</span><h3>Reply tracking</h3><p>QR scans and calls to tracked numbers are logged against the letter that caused them.</p></div>
+    <div class="fcard"><span class="tag">Tracking</span><h3>Job pipeline</h3><p>New → posted → replied → quoted → won, with job value entered on win.</p></div>
+    <div class="fcard"><span class="tag">Reporting</span><h3>Monthly return report</h3><p>Spend, replies, jobs, revenue. This is what keeps clients subscribed.</p></div>
+    <div class="fcard"><span class="tag">Reporting</span><h3>Weekly digest</h3><p>Monday email: new hot leads, letters sent, replies waiting.</p></div>
+    <div class="fcard"><span class="tag">Setup</span><h3>Your area only</h3><p>Your territory is yours. No other landscaper gets the same leads.</p></div>
+  </div>
+</section>
+
+<footer>All screens show example data. Scores and timings are tuned to your business during setup.</footer>
+</div>
+
+<script>
+(function(){
+  const leads=[
+    {id:1,type:'pool',label:'New pool',addr:'14 Example St',sub:'Kellyville',ref:'CDC-0841',appr:'4 Nov 2026',cost:68000,lot:720,dist:3.1,builder:'Parkview Pools',score:88,parts:[35,15,20,8,10],status:'Queued',x:300,y:170},
+    {id:2,type:'house',label:'New double-storey home',addr:'7 Sample Ave',sub:'Box Hill',ref:'DA-2211',appr:'28 Oct 2026',cost:620000,lot:450,dist:8.4,builder:'Northline Homes',score:81,parts:[30,25,14,6,6],status:'Waiting',x:420,y:90},
+    {id:3,type:'granny',label:'Granny flat',addr:'22 Demo Rd',sub:'Castle Hill',ref:'CDC-0907',appr:'2 Nov 2026',cost:185000,lot:830,dist:4.0,builder:'Kestrel Granny Flats',score:77,parts:[25,18,19,9,6],status:'Posted',x:250,y:250},
+    {id:4,type:'pool',label:'New pool',addr:'3 Mockup Cl',sub:'Rouse Hill',ref:'CDC-0866',appr:'30 Oct 2026',cost:54000,lot:600,dist:5.6,builder:'Parkview Pools',score:74,parts:[35,12,16,6,5],status:'Replied',x:360,y:120},
+    {id:5,type:'house',label:'Knockdown-rebuild',addr:'41 Pilot Pde',sub:'Baulkham Hills',ref:'DA-2189',appr:'21 Oct 2026',cost:540000,lot:690,dist:6.2,builder:'Ridgeway Building Co',score:72,parts:[28,23,15,7,0],status:'Waiting',x:200,y:300},
+    {id:6,type:'house',label:'New single-storey home',addr:'9 Trial St',sub:'Schofields',ref:'DA-2240',appr:'6 Nov 2026',cost:410000,lot:400,dist:11.8,builder:'Northline Homes',score:58,parts:[30,18,4,5,1],status:'Waiting',x:470,y:60},
+    {id:7,type:'granny',label:'Granny flat',addr:'5 Draft Ln',sub:'Kellyville Ridge',ref:'CDC-0912',appr:'8 Nov 2026',cost:140000,lot:560,dist:7.1,builder:'Kestrel Granny Flats',score:55,parts:[25,10,12,6,2],status:'Waiting',x:390,y:200},
+    {id:8,type:'pool',label:'Plunge pool',addr:'60 Sketch Way',sub:'Marsden Park',ref:'CDC-0875',appr:'31 Oct 2026',cost:32000,lot:380,dist:14.2,builder:'Owner builder',score:44,parts:[35,5,1,3,0],status:'Skipped',x:520,y:150}
+  ];
+  const cls=s=>s>=75?'hot':s>=50?'warm':'cold';
+  const color=s=>s>=75?'var(--hot)':s>=50?'var(--accent)':'var(--cold)';
+  const money=n=>'$'+n.toLocaleString('en-AU');
+  let filter='all', sel=1;
+  const listEl=document.getElementById('list'), detailEl=document.getElementById('detail'), mapEl=document.getElementById('map');
+  const visible=()=>leads.filter(l=>filter==='all'||(filter==='hot'?l.score>=75:l.type===filter));
+  function drawMap(){
+    const v=visible().map(l=>l.id);
+    let s='<defs><pattern id="g" width="30" height="30" patternUnits="userSpaceOnUse"><path d="M30 0H0V30" fill="none" stroke="var(--line)" stroke-width="1"/></pattern></defs>';
+    s+='<rect width="600" height="380" fill="url(#g)"/>';
+    s+='<path d="M0 230 C120 210 210 260 330 230 S520 190 600 210" fill="none" stroke="var(--cold)" stroke-width="3" opacity=".5"/>';
+    s+='<path d="M180 0 C200 120 260 200 300 380" fill="none" stroke="var(--cold)" stroke-width="2" opacity=".4"/>';
+    s+='<circle cx="290" cy="185" r="165" fill="var(--accent)" fill-opacity=".06" stroke="var(--accent)" stroke-dasharray="5 5"/>';
+    [['Box Hill',430,40],['Schofields',500,40],['Rouse Hill',330,100],['Kellyville',230,150],['Castle Hill',200,235],['Baulkham Hills',120,330],['Marsden Park',500,130]].forEach(t=>{s+=`<text x="${t[1]}" y="${t[2]}" font-size="11" fill="var(--muted)" font-family="IBM Plex Mono, monospace">${t[0]}</text>`});
+    s+='<rect x="282" y="177" width="16" height="16" rx="3" fill="var(--ink)"/><text x="304" y="206" font-size="11" fill="var(--ink)" font-weight="600">Your base</text>';
+    leads.forEach(l=>{
+      const on=v.includes(l.id), act=l.id===sel;
+      s+=`<g style="cursor:pointer" data-id="${l.id}" opacity="${on?1:.18}">`+
+        (act?`<circle cx="${l.x}" cy="${l.y}" r="15" fill="none" stroke="${color(l.score)}" stroke-width="2"/>`:'')+
+        `<circle cx="${l.x}" cy="${l.y}" r="8" fill="${color(l.score)}" stroke="var(--surface)" stroke-width="2"/></g>`;
+    });
+    s+='<text x="12" y="368" font-size="10.5" fill="var(--muted)">Illustrative map · dashed ring = 15 km service area</text>';
+    mapEl.innerHTML=s;
+    mapEl.querySelectorAll('g[data-id]').forEach(g=>g.addEventListener('click',()=>{sel=+g.dataset.id;render()}));
+  }
+  function drawList(){
+    listEl.innerHTML=visible().map(l=>`<button class="lead-row" data-id="${l.id}" aria-current="${l.id===sel}">
+      <span class="score ${cls(l.score)}">${l.score}</span>
+      <span style="min-width:0"><div class="t">${l.label} · ${l.sub}</div><div class="s">${l.addr} · ${money(l.cost)} · ${l.dist} km</div></span>
+      <span class="status ${l.status==='Posted'?'sent':l.status==='Replied'?'replied':''}">${l.status}</span></button>`).join('')||'<p style="color:var(--muted);font-size:14px">No leads match this filter.</p>';
+    listEl.querySelectorAll('.lead-row').forEach(b=>b.addEventListener('click',()=>{sel=+b.dataset.id;render()}));
+  }
+  function drawDetail(){
+    const l=leads.find(x=>x.id===sel); if(!l){detailEl.hidden=true;return} detailEl.hidden=false;
+    const names=['Job type fit','Cost of works','Distance','Lot size','Timing'], max=[35,25,20,10,10];
+    const steps=['Approved','Tagged and scored','Waiting for send date','Letter posted','Replied','Quoted','Won'];
+    const at={'Waiting':2,'Queued':2,'Posted':3,'Replied':4,'Quoted':5,'Won':6,'Skipped':1}[l.status];
+    detailEl.innerHTML=`<div class="detail-top"><div><span class="eyebrow">${l.ref} · approved ${l.appr}</span><h3 style="font-size:20px;margin-top:4px">${l.label}, ${l.addr}, ${l.sub}</h3></div><span class="score ${cls(l.score)}" style="padding:6px 12px;font-size:18px">${l.score}</span></div>
+      <dl class="kv"><div><dt>Cost of works</dt><dd>${money(l.cost)}</dd></div><div><dt>Lot size</dt><dd>${l.lot} m²</dd></div><div><dt>Distance</dt><dd>${l.dist} km</dd></div><div><dt>Applicant</dt><dd>${l.builder}</dd></div></dl>
+      <div class="bars">${l.parts.map((p,i)=>`<div class="bar"><span>${names[i]}</span><span class="track"><span class="fill" style="display:block;width:${p/max[i]*100}%"></span></span><span class="v">${p}/${max[i]}</span></div>`).join('')}</div>
+      <div class="tl">${steps.map((s,i)=>`<span class="${i<=at?'on':''}">${s}</span>${i<steps.length-1?'<i>›</i>':''}`).join('')}</div>
+      <div class="actions"><button class="btn" data-a="send">Post letter now</button><button class="btn ghost" data-a="builder">Email builder</button><button class="btn ghost" data-a="quoted">Mark quoted</button><button class="btn ghost" data-a="skip">Skip</button></div>
+      <div class="toast" id="toast" role="status"></div>`;
+    detailEl.querySelectorAll('[data-a]').forEach(b=>b.addEventListener('click',()=>{
+      const a=b.dataset.a, t=document.getElementById('toast');
+      if(a==='send'){l.status='Posted';msg='Letter A queued for printing. Posts tomorrow.'}
+      else if(a==='builder'){msg='Email to '+l.builder+' added to the builder sequence.'}
+      else if(a==='quoted'){l.status='Quoted';msg='Moved to Quoted.'}
+      else {l.status='Skipped';msg='Skipped. This address won’t be posted to.'}
+      render(); document.getElementById('toast').textContent=msg+' (demo)';
+    }));
+  }
+  let msg='';
+  function render(){drawMap();drawList();drawDetail()}
+  document.querySelectorAll('.chip').forEach(c=>c.addEventListener('click',()=>{
+    filter=c.dataset.f; document.querySelectorAll('.chip').forEach(x=>x.setAttribute('aria-pressed',x===c));
+    const v=visible(); if(v.length&&!v.some(l=>l.id===sel)) sel=v[0].id; render();
+  }));
+  document.querySelectorAll('.switch').forEach(s=>s.addEventListener('click',()=>s.setAttribute('aria-checked',s.getAttribute('aria-checked')!=='true')));
+  const tabs=[...document.querySelectorAll('.tab')];
+  tabs.forEach(t=>t.addEventListener('click',()=>{
+    tabs.forEach(x=>{x.setAttribute('aria-selected',x===t);document.getElementById(x.getAttribute('aria-controls')).hidden=x!==t});
+  }));
+  const f=[['Letters posted',420],['Replies',31],['Quotes',18],['Jobs won',7]];
+  document.getElementById('funnel').innerHTML=f.map(r=>`<div class="frow"><span>${r[0]}</span><span class="track"><span class="fill" style="display:block;width:${Math.max(r[1]/420*100,1.5)}%"></span></span><span class="v">${r[1]}</span></div>`).join('');
+  render();
+})();
+</script>
+
+</body>
+</html>
